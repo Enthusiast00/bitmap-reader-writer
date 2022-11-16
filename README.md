@@ -10,7 +10,7 @@ FORMATS
   . X8 G8 B8
 BITMAPV5HEADER
 
-writes 32 bit  A8 G8 B8
+writes 32 bit  A8 R8 G8 B8
 
 . no RLE
 
