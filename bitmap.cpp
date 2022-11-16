@@ -62,16 +62,16 @@ bool bitmap::LoadFile(const char * path) {
                 if     (greenM==G6) { return LoadBmp16(F16G6,file,sz); }
                 else if(alphaM==A1) { return LoadBmp16(F16A,file,sz);  }
                 else if(alphaM==0)  { return LoadBmp16(F16X,file,sz);  }
-                else                { fclose(file); _Throw("BMP Compression Not Supported"); }
+                else                { fclose(file); _Throw("BMP Not Supported"); }
 
             } else if(*bitspp==32) {
 
                 if(alphaM==A8)      { return LoadBmp(F32A,file,sz);    }
                 else if(alphaM==0)  { return LoadBmp(F32X,file,sz);    }
-                else                { fclose(file); _Throw("BMP Compression Not Supported");   }
+                else                { fclose(file); _Throw("BMP Not Supported");   }
 
             } else if(*bitspp==24)  { return LoadBmp(F24,file,sz);  }
-            else {  fclose(file); _Throw("BMP Compression Not Supported");  }
+            else {  fclose(file); _Throw("BMP Not Supported");  }
 
         } else { return LoadBmp(F24,file,sz); }
 
