@@ -20,7 +20,7 @@ bool bitmap::LoadFile(const char * path) {
     if(!file) { _Throw("File Error"); }
 #endif // _MSC_VER
 
-    uint8_t header[MAX_HEADERSIZE+1];
+    uint8_t header[MAX_HEADERSIZE];
     memset (header,0,MAX_HEADERSIZE);
 
 
@@ -112,8 +112,7 @@ bool Loadpixel16(uint32_t format, uint16_t p, pixel*px) {
 
 bool bitmap::LoadBmp16(uint32_t format,FILE * file,ISize sz) {
 
-    uint32_t pxcnt   = 2;
-    uint32_t imagesz = sz.h*sz.w*pxcnt;
+    uint32_t imagesz = sz.h*sz.w*2;
 
     uint16_t *data   = new uint16_t[sz.h*sz.w];
 
@@ -151,14 +150,14 @@ bool bitmap::LoadBmp(uint32_t format,FILE * file,ISize sz) {
     uint32_t channel_cnt   = (format==F24)?3:4;
     uint32_t imagesz       = sz.h*sz.w*channel_cnt;
 
-    uint8_t *data          = new uint8_t[imagesz+1];
+    uint8_t *data          = new uint8_t[imagesz];
 
     if(fread(data,1,imagesz,file)!=imagesz) {
         delete [] data;
         fclose(file); _Throw("BMP data Read Fail");
     }
 
-    m_data                = new pixel[sz.h*sz.w+1];
+    m_data                = new pixel[sz.h*sz.w];
 
     for(long     H=0, h=(sz.h-1) ; h>=0   ; H++, h-- ) {
 
@@ -190,7 +189,7 @@ bool bitmap::WriteFile(const char* path){
 
     datasize += (imagepxsz*4);
 
-    uint8_t *imgdata = new uint8_t[datasize+1];
+    uint8_t *imgdata = new uint8_t[datasize];
     for(uint32_t i=0; i <= datasize; imgdata[i]=0,i++);
 
     imgdata[0]='B'; imgdata[1]='M';
