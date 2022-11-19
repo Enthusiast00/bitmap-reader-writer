@@ -45,7 +45,7 @@ static bool Data2Bitmap(HDC hdc,HBITMAP * bitmap,const ISize& size, uint8_t* dat
     (*bitmap)    = CreateCompatibleBitmap ( hdc,size.w,size.h-1);
     if((*bitmap) == NULL) { _Throw("BMP create fail "); }
 
-    SetBitmapBits((*bitmap),size.w*(size.h-1)*4,bitmapbits);
+    SetBitmapBits((*bitmap),size.w*size.h*4,bitmapbits);
 
     delete [] bitmapbits;
 
