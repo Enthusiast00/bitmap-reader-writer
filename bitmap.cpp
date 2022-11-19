@@ -95,8 +95,8 @@ bool Loadpixel16(uint32_t format, uint16_t p, pixel*px) {
     } else if((format==F16A)||(format==F16X)) {
 
         r= ((p& R5AX) >>10)/31.0f;
-        g= ((p& G5)    >>5)/31.0f;
-        b= ( p& B5)   /31.0f;
+        g= ((p& G5)   >>5) /31.0f;
+        b= ( p& B5)        /31.0f;
 
         a= ( format==F16A)?(p&A1)>>15:1.0f;
 
