@@ -76,7 +76,7 @@ bool bitmap::LoadFile(const char * path) {
         } else { return LoadBmp(F24,file,sz); }
 
 
-    } else {  fclose(file); _Throw("BMP Not BITMAPINFOHEADER"); }
+    } else {  fclose(file); _Throw("BMP Not Supported"); }
 
     fclose(file);
     return true;
