@@ -88,9 +88,9 @@ bool Loadpixel16(uint32_t format, uint16_t p, pixel*px) {
 
     if(format==F16G6) {
 
-        r= ((p&R5) >>11)/31.0f;
-        g= ((p&G6) >>5)/63.0f;
-        b= ( p&B5) /31.0f;
+        r= ((p&R5) >>11) /31.0f;
+        g= ((p&G6) >> 5) /63.0f;
+        b= ( p&B5)       /31.0f;
 
     } else if((format==F16A)||(format==F16X)) {
 
@@ -133,7 +133,7 @@ bool bitmap::LoadBmp16(uint32_t format,FILE * file,ISize sz) {
                 delete [] data; delete [] m_data;
                 m_data=NULL;
                 fclose(file);
-                _Throw("BMP LOADPIXEL16 Fail");
+                _Throw("BMP LoadPixel16 Fail");
             }
         }
 
@@ -148,23 +148,24 @@ bool bitmap::LoadBmp16(uint32_t format,FILE * file,ISize sz) {
 
 bool bitmap::LoadBmp(uint32_t format,FILE * file,ISize sz) {
 
-    uint32_t pxcnt   = (format==F24)?3:4;
-    uint32_t imagesz = sz.h*sz.w*pxcnt;
+    uint32_t channel_cnt   = (format==F24)?3:4;
+    uint32_t imagesz       = sz.h*sz.w*channel_cnt;
 
-    uint8_t *data  = new uint8_t[imagesz];
+    uint8_t *data          = new uint8_t[imagesz+1];
 
     if(fread(data,1,imagesz,file)!=imagesz) {
         delete [] data;
         fclose(file); _Throw("BMP data Read Fail");
     }
 
-    m_data= new pixel[sz.h*sz.w];
+    m_data                = new pixel[sz.h*sz.w+1];
 
-    for(long  H=0,h=(sz.h-1); h>=0; H++,h--) {
+    for(long     H=0, h=(sz.h-1) ; h>=0   ; H++, h-- ) {
 
-        for(long i=0,w=0; w<(sz.w); w++,i+=pxcnt) {
+        for(long i=0, w=0        ; w<sz.w ; w++, i+=channel_cnt ) {
 
-            long pos=((h)*sz.w*pxcnt);
+            long pos =( h*sz.w*channel_cnt );
+
             m_data[H*sz.w+w].b = data[pos+i];
             m_data[H*sz.w+w].g = data[pos+i+1];
             m_data[H*sz.w+w].r = data[pos+i+2];
@@ -172,8 +173,8 @@ bool bitmap::LoadBmp(uint32_t format,FILE * file,ISize sz) {
         }
 
     }
-
     delete [] data;
+
     m_size.h=sz.h;
     m_size.w=sz.w;
 
@@ -249,13 +250,13 @@ bool bitmap::WriteFile(const char* path){
 
 #ifdef _MSC_VER
     FILE * file=NULL;
-    if( fopen_s(&file,path,"wb") != 0 ) { delete [] imgdata; _Throw("File Error"); }
+    if( fopen_s(&file,path,"wb") != 0 )      { delete [] imgdata; _Throw("File Error"); }
 #else
     FILE * file=fopen(path,"wb");
-    if(!file) { delete [] imgdata; _Throw("File Error"); }
+    if(!file)                                { delete [] imgdata; _Throw("File Error"); }
 #endif // _MSC_VER
 
-    fwrite(imgdata,datasize,1,file);
+    if(fwrite(imgdata,datasize,1,file) != 1) { delete [] imgdata; _Throw("File Error"); }
 
     delete [] imgdata;
     return true;
